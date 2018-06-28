@@ -72,7 +72,9 @@ public class GestionUtilisateur {
         em.getTransaction().begin();
         Query q = em.createQuery(UtilisateurConstantes.REQUEST_DELETE_UTILISATEUR);
         q.setParameter("idUtil", idUtil);
-        return q.executeUpdate();
+         int a = q.executeUpdate();
+        em.getTransaction().commit();
+        return a;
     }
 
     public void ajouterUtilisateur(Identifiants id) {
@@ -89,6 +91,23 @@ public class GestionUtilisateur {
         str = "Liste des utilisateurs :\n";
         for (Identifiants i : list) {
             str = str + "Login : " + i.getLogin() + "\nMot de passe : " + i.getMdp() + "\n\n";
+        }
+        return str;
+    }
+    
+    public String miseEnFormeTextArea2(ArrayList<Identifiants> list) {
+        String str = "";
+        str = "Utilisateur ajouté :\n";
+        for (Identifiants i : list) {
+            str = str + "Login : " + i.getLogin() + "\nMot de passe : " + i.getMdp() + "\n\n";
+        }
+        return str;
+    }
+    
+    public String miseEnFormeTextArea3(ArrayList<Identifiants> list) {
+        String str = "";
+        for (Identifiants i : list) {
+            str = "Login : " + i.getLogin() + "\nMot de passe : " + i.getMdp() + "\n\n";
         }
         return str;
     }

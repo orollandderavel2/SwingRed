@@ -8,7 +8,8 @@ package com.view;
 import com.controleur.GestionUtilisateur;
 import com.modele.Identifiants;
 
-import com.utilisateur.utils.UtilisateurConstantes;
+import static com.utilisateur.utils.UtilisateurConstantes.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
@@ -19,6 +20,7 @@ import javax.swing.JOptionPane;
 public class UtilisateurIHM extends javax.swing.JFrame {
 
     ArrayList<Identifiants> listeIdentifiants = new ArrayList<>();
+    ArrayList<String> listeLogins = new ArrayList<>();
     GestionUtilisateur gu = new GestionUtilisateur();
     Identifiants identifiant = new Identifiants();
     int idAModifier;
@@ -69,6 +71,7 @@ public class UtilisateurIHM extends javax.swing.JFrame {
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         textFieldMdp.setEditable(false);
+        textFieldMdp.setBackground(new java.awt.Color(128, 128, 128));
         textFieldMdp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldMdpActionPerformed(evt);
@@ -76,6 +79,7 @@ public class UtilisateurIHM extends javax.swing.JFrame {
         });
 
         textFieldLogin.setEditable(false);
+        textFieldLogin.setBackground(new java.awt.Color(128, 128, 128));
         textFieldLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldLoginActionPerformed(evt);
@@ -210,10 +214,13 @@ public class UtilisateurIHM extends javax.swing.JFrame {
         String nomUtilisateur = jopRechercher.showInputDialog(null, "Rentrez le nom d'utilisateur à rechercher : ", "Rechercher un utilisateur", JOptionPane.QUESTION_MESSAGE);
         textFieldLogin.setText(nomUtilisateur);
         resultArea.setText("");
-        okButton.setText(UtilisateurConstantes.OKBUTTON_RECHERCHER_1);
+        okButton.setText(OKBUTTON_RECHERCHER);
         //Activation et désactivation des objets
         okButton.setEnabled(true);
+        textFieldLogin.setBackground(Color.WHITE);
         textFieldLogin.setEditable(true);
+        textFieldMdp.setText("");
+        textFieldMdp.setBackground(Color.GRAY);
         textFieldMdp.setEditable(false);
 
     }//GEN-LAST:event_rechercherUnUtilisateurActionPerformed
@@ -225,9 +232,15 @@ public class UtilisateurIHM extends javax.swing.JFrame {
         listeIdentifiants.clear();
         listeIdentifiants = gu.consulterUtilisateurParLogin(nomUtilisateur);
         if (listeIdentifiants.isEmpty()) {
-            resultArea.setText(UtilisateurConstantes.MESSAGE_NO_USER);
+            resultArea.setText(MESSAGE_NO_USER);
+            textFieldLogin.setEditable(false);
+            textFieldMdp.setEditable(false);
             textFieldLogin.setText("");
+            textFieldLogin.setBackground(Color.GRAY);
+            textFieldMdp.setBackground(Color.GRAY);
             textFieldMdp.setText("");
+            okButton.setText(OKBUTTON_MODIFIER);
+            okButton.setEnabled(false);
         } else {
 
             idAModifier = listeIdentifiants.get(0).getId();
@@ -235,10 +248,12 @@ public class UtilisateurIHM extends javax.swing.JFrame {
             textFieldLogin.setText(listeIdentifiants.get(0).getLogin());
             textFieldMdp.setText(listeIdentifiants.get(0).getMdp());
             resultArea.setText("");
-            okButton.setText(UtilisateurConstantes.OKBUTTON_MODIFIER);
+            okButton.setText(OKBUTTON_MODIFIER);
             //Activation et désactivation des objets
             okButton.setEnabled(true);
             textFieldLogin.setEditable(true);
+            textFieldLogin.setBackground(Color.WHITE);
+            textFieldMdp.setBackground(Color.WHITE);
             textFieldMdp.setEditable(true);
         }
 //Change le texte du bouton en mode Modifier et l'enable
@@ -249,19 +264,27 @@ public class UtilisateurIHM extends javax.swing.JFrame {
         JOptionPane jopRechercher = new JOptionPane();
         String nomUtilisateur = jopRechercher.showInputDialog(null, "Rentrez le nom d'utilisateur à supprimer : ", "Supprimer un utilisateur", JOptionPane.QUESTION_MESSAGE);
         textFieldLogin.setText(nomUtilisateur);
-        okButton.setText(UtilisateurConstantes.OKBUTTON_SUPPRIMER);
+        resultArea.setText("");
+        textFieldMdp.setText("");
+        textFieldMdp.setEnabled(true);
+        textFieldLogin.setBackground(Color.WHITE);
+        textFieldMdp.setBackground(Color.GRAY);
+        okButton.setText(OKBUTTON_SUPPRIMER);
         okButton.setEnabled(rootPaneCheckingEnabled);
         textFieldLogin.setEditable(rootPaneCheckingEnabled);
+
         //Change le texte du bouton en mode Supprimer et l'enable
-        //Enable l'edit du text field login
+        //Enable l'edit du text field login}
     }//GEN-LAST:event_supprimerActionPerformed
 
     private void ajouterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterActionPerformed
-        okButton.setText(UtilisateurConstantes.OKBUTTON_AJOUTER);
+        okButton.setText(OKBUTTON_AJOUTER);
         resultArea.setText("");
         //Activation et désactivation des objets
         okButton.setEnabled(true);
+        textFieldLogin.setBackground(Color.WHITE);
         textFieldLogin.setEditable(true);
+        textFieldMdp.setBackground(Color.WHITE);
         textFieldMdp.setEditable(true);
         //Enable l'edit des 2 text fields
         //Enable le bouton et change son texte pour Ajouter
@@ -271,6 +294,15 @@ public class UtilisateurIHM extends javax.swing.JFrame {
         //Affiche tous les user dans le text area
         listeIdentifiants = gu.consulterUtilisateurs();
         String str = gu.miseEnFormeTextArea(listeIdentifiants);
+        okButton.setText(OKBUTTON_BASE);
+        okButton.setEnabled(false);
+        resultArea.setText("");
+        textFieldMdp.setText("");
+        textFieldLogin.setText("");
+        textFieldLogin.setBackground(Color.GRAY);
+        textFieldLogin.setEditable(false);
+        textFieldMdp.setBackground(Color.GRAY);
+        textFieldMdp.setEditable(false);
         resultArea.setText(str);
 
     }//GEN-LAST:event_afficherTousLesUtilisateursActionPerformed
@@ -285,16 +317,24 @@ public class UtilisateurIHM extends javax.swing.JFrame {
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
         switch (okButton.getText()) {
-            case UtilisateurConstantes.OKBUTTON_RECHERCHER_1:
+            case OKBUTTON_RECHERCHER:
                 //Appeler Recherche d'un employé et affichage dans text area
                 listeIdentifiants.clear();
                 listeIdentifiants = gu.consulterUtilisateurParLogin(textFieldLogin.getText());
 
-                String str = gu.miseEnFormeTextArea(listeIdentifiants);
-                resultArea.setText(str);
+                if (textFieldLogin.getText() != "") {
+                    String str = gu.miseEnFormeTextArea(listeIdentifiants);
+                    if (str != "Liste des utilisateurs :\n") {
+                        resultArea.setText(str);
+                    } else {
+                        resultArea.setText(MESSAGE_NO_USER);
+                    }
+                } else {
+                    resultArea.setText(MESSAGE_NO_USER);
+                }
                 break;
 
-            case UtilisateurConstantes.OKBUTTON_MODIFIER:
+            case OKBUTTON_MODIFIER:
                 //On change avec les nouvelles valeurs rentrées
                 //CHANGER IDENAMODIFIER POURSAUVEGARDER PLUTOT L'ID DE L'ENTREE A MODIFIER (PEUT ETRE L'AFFICHER ?)
 
@@ -306,44 +346,57 @@ public class UtilisateurIHM extends javax.swing.JFrame {
                 listeIdentifiants.clear();
                 listeIdentifiants = gu.consulterUtilisateurParLogin(textFieldLogin.getText());
 
-                String strMod = "Nouvelle entrée :\n" + gu.miseEnFormeTextArea(listeIdentifiants);
+                String strMod = "Nouvelle entrée :\n" + gu.miseEnFormeTextArea3(listeIdentifiants);
                 resultArea.setText(strMod);
 
                 break;
 
-            case UtilisateurConstantes.OKBUTTON_SUPPRIMER:
+            case OKBUTTON_SUPPRIMER:
 
                 //On supprime l'user rentré dans login
                 listeIdentifiants.clear();
                 listeIdentifiants = gu.consulterUtilisateurParLogin(textFieldLogin.getText());
                 int id = listeIdentifiants.get(0).getId();
+//                if (id != 0){
                 int statusSuppr = gu.supprimerUtilisateur(id);
                 resultArea.setText(Integer.toString(statusSuppr));
                 if (statusSuppr > 0) {
                     resultArea.setText("Suppression réussie");
 
                 } else {
-                    resultArea.setText("Suppression échoué");
+                    resultArea.setText("Suppression échouée");
                 }
 
                 break;
 
-            case UtilisateurConstantes.OKBUTTON_AJOUTER:
-                identifiant.setLogin(textFieldLogin.getText());
-                identifiant.setMdp(textFieldMdp.getText());
-                gu.ajouterUtilisateur(identifiant);
+            case OKBUTTON_AJOUTER:
+                if (textFieldLogin.getText() != "") {
+                    listeIdentifiants = gu.consulterUtilisateurs();
+                    int i = 0;
+                    for (i = 0; i < listeIdentifiants.size(); i++) {
+                        listeLogins.add(listeIdentifiants.get(i).getLogin());
+                    }
+                    if (listeLogins.contains(textFieldLogin.getText())) {
+                        resultArea.setText(MESSAGE_NO_ADD);
+                    } else {
+
+                        identifiant.setLogin(textFieldLogin.getText());
+                        identifiant.setMdp(textFieldMdp.getText());
+                        gu.ajouterUtilisateur(identifiant);
 
 //              Affiche le résultat de l'ajout dans la text area 
-                listeIdentifiants.clear();
-                listeIdentifiants = gu.consulterUtilisateurParLogin(textFieldLogin.getText());
+                        listeIdentifiants.clear();
+                        listeIdentifiants = gu.consulterUtilisateurParLogin(textFieldLogin.getText());
 
-                str = gu.miseEnFormeTextArea(listeIdentifiants);
-                resultArea.setText(str);
+                        String str = gu.miseEnFormeTextArea2(listeIdentifiants);
+                        resultArea.setText(str);
+                    }
+                }
                 break;
 
 //            Ajouter un Utilisateur avec le login et le mdp rentré
             default:
-                okButton.setText("Youpi");
+                okButton.setText("Ok");
                 break;
         }
     }//GEN-LAST:event_okButtonActionPerformed
